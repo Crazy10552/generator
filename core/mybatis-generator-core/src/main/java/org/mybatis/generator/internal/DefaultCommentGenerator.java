@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2018 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -298,7 +298,10 @@ public class DefaultCommentGenerator implements CommentGenerator {
         sb.append('.');
         sb.append(introspectedColumn.getActualColumnName());
         field.addJavaDocLine(sb.toString());
-
+        /**
+         * 增加数据库的属性注释
+         **/
+        field.addJavaDocLine("  *"+introspectedColumn.getRemarks());
         addJavadocTag(field, false);
 
         field.addJavaDocLine(" */"); //$NON-NLS-1$
