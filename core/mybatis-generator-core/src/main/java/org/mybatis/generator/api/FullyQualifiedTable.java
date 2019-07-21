@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2018 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.mybatis.generator.config.DomainObjectRenamingRule;
 
 public class FullyQualifiedTable {
 
+    private String remark;
     private String introspectedCatalog;
     private String introspectedSchema;
     private String introspectedTableName;
@@ -44,6 +45,16 @@ public class FullyQualifiedTable {
     private String beginningDelimiter;
     private String endingDelimiter;
     private DomainObjectRenamingRule domainObjectRenamingRule;
+
+
+    public String getRemark()
+    {
+        return this.remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     /**
      * This object is used to hold information related to the table itself, not the columns in the

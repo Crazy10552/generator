@@ -14,25 +14,52 @@
  *    limitations under the License.
  */
 package org.mybatis.generator.api.dom.xml;
-
 import java.util.Objects;
 
-public class Attribute {
-
+/**
+ * @author yttiany
+ * @author yttiany
+ */
+public class Attribute implements Comparable<Attribute> {
     private String name;
-
     private String value;
 
-    public Attribute(String name, String value) {
+    public Attribute(String name, String value)
+    {
         this.name = Objects.requireNonNull(name);
         this.value = Objects.requireNonNull(value);
     }
 
-    public String getName() {
-        return name;
+    public String getName()
+    {
+        return this.name;
     }
 
-    public String getValue() {
-        return value;
+    public String getValue()
+    {
+        return this.value;
+    }
+
+    public String getFormattedContent()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.name);
+        sb.append("=\"");
+        sb.append(this.value);
+        sb.append('"');
+
+        return sb.toString();
+    }
+
+    @Override
+    public int compareTo(Attribute o)
+    {
+        if (this.name == null) {
+            return o.name == null ? 0 : -1;
+        }
+        if (o.name == null) {
+            return 0;
+        }
+        return this.name.compareTo(o.name);
     }
 }

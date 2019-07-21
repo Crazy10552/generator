@@ -15,20 +15,40 @@
  */
 package org.mybatis.generator.api.dom.xml;
 
-public class TextElement implements VisitableElement {
+import org.mybatis.generator.api.dom.OutputUtilities;
 
+/**
+ * @author yttiany
+ * @author yttiany
+ */
+public class TextElement extends Element implements VisitableElement
+{
     private String content;
 
-    public TextElement(String content) {
+    public TextElement(String content)
+    {
         this.content = content;
+    }
+
+    @Override
+    public String getFormattedContent(int indentLevel)
+    {
+        StringBuilder sb = new StringBuilder();
+        OutputUtilities.xmlIndent(sb, indentLevel);
+        sb.append(this.content);
+        return sb.toString();
+    }
+
+    @Override
+    public <R> R accept(ElementVisitor<R> visitor) {
+        return visitor.visit(this);
     }
 
     public String getContent() {
         return content;
     }
 
-    @Override
-    public <R> R accept(ElementVisitor<R> visitor) {
-        return visitor.visit(this);
+    public void setContent(String content) {
+        this.content = content;
     }
 }

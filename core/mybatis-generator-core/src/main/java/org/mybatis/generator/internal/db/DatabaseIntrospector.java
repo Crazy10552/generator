@@ -642,6 +642,10 @@ public class DatabaseIntrospector {
             enhanceIntrospectedTable(introspectedTable);
 
             answer.add(introspectedTable);
+
+            //增加一对多,多对多配置赋值
+            introspectedTable.setOneToOnes(tc.getOneToOnes());
+            introspectedTable.setOneToManys(tc.getOneToManys());
         }
 
         return answer;

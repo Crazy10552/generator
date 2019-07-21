@@ -27,28 +27,11 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-import org.mybatis.generator.config.ColumnOverride;
-import org.mybatis.generator.config.ColumnRenamingRule;
-import org.mybatis.generator.config.CommentGeneratorConfiguration;
-import org.mybatis.generator.config.Configuration;
-import org.mybatis.generator.config.ConnectionFactoryConfiguration;
-import org.mybatis.generator.config.Context;
-import org.mybatis.generator.config.DomainObjectRenamingRule;
-import org.mybatis.generator.config.GeneratedKey;
-import org.mybatis.generator.config.IgnoredColumn;
-import org.mybatis.generator.config.IgnoredColumnException;
-import org.mybatis.generator.config.IgnoredColumnPattern;
-import org.mybatis.generator.config.JDBCConnectionConfiguration;
-import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
-import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
-import org.mybatis.generator.config.JavaTypeResolverConfiguration;
-import org.mybatis.generator.config.ModelType;
-import org.mybatis.generator.config.PluginConfiguration;
-import org.mybatis.generator.config.PropertyHolder;
-import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
-import org.mybatis.generator.config.TableConfiguration;
+import org.mybatis.generator.config.*;
 import org.mybatis.generator.exception.XMLParserException;
 import org.mybatis.generator.internal.ObjectFactory;
+import org.mybatis.generator.internal.util.StringUtility;
+import org.mybatis.generator.internal.util.messages.Messages;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -143,7 +126,7 @@ public class MyBatisGeneratorConfigurationParser {
         }
     }
 
-    private void parseContext(Configuration configuration, Node node) {
+    private void parseContext(Configuration configuration, Node node) throws XMLParserException {
 
         Properties attributes = parseAttributes(node);
         String defaultModelType = attributes.getProperty("defaultModelType"); //$NON-NLS-1$
@@ -224,7 +207,7 @@ public class MyBatisGeneratorConfigurationParser {
         }
     }
 
-    protected void parseTable(Context context, Node node) {
+    protected void parseTable(Context context, Node node) throws XMLParserException {
         TableConfiguration tc = new TableConfiguration(context);
         context.addTableConfiguration(tc);
 
@@ -366,7 +349,11 @@ public class MyBatisGeneratorConfigurationParser {
                 parseColumnOverride(tc, childNode);
             } else if ("ignoreColumn".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseIgnoreColumn(tc, childNode);
-            } else if ("ignoreColumnsByRegex".equals(childNode.getNodeName())) { //$NON-NLS-1$
+            }else if ("oneToOne".equals(childNode.getNodeName())){
+                parseOneToOne(tc, childNode);
+            } else if ("oneToMany".equals(childNode.getNodeName())) {
+                parseOneToMany(tc, childNode);
+            }else if ("ignoreColumnsByRegex".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseIgnoreColumnByRegex(tc, childNode);
             } else if ("generatedKey".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseGeneratedKey(tc, childNode);
@@ -376,6 +363,7 @@ public class MyBatisGeneratorConfigurationParser {
                 parseColumnRenamingRule(tc, childNode);
             }
         }
+        context.addTableConfiguration(tc);
     }
 
     private void parseColumnOverride(TableConfiguration tc, Node node) {
@@ -458,6 +446,49 @@ public class MyBatisGeneratorConfigurationParser {
         }
 
         tc.addIgnoredColumn(ic);
+    }
+
+    private void parseOneToOne(TableConfiguration tc, Node node) throws XMLParserException {
+        Properties attributes = parseAttributes(node);
+        String mappingTable = attributes.getProperty("mappingTable");
+        String column = attributes.getProperty("column");
+        if (!StringUtility.stringHasValue(mappingTable)){
+            throw new XMLParserException(Messages.getString("RuntimeError.23", mappingTable));
+        }
+        if (!StringUtility.stringHasValue(column)) {
+            throw new XMLParserException(Messages.getString("RuntimeError.24", column));
+        }
+        OneToOne oto = new OneToOne(mappingTable, column);
+        String joinColumn = attributes.getProperty("joinColumn");
+        if (StringUtility.stringHasValue(joinColumn)) {
+            oto.setJoinColumn(joinColumn);
+        }
+        String where = attributes.getProperty("where");
+        if (StringUtility.stringHasValue(where)) {
+            oto.setWhere(where);
+        }
+        tc.getOneToOnes().add(oto);
+    }
+    private void parseOneToMany(TableConfiguration tc, Node node) throws XMLParserException {
+        Properties attributes = parseAttributes(node);
+        String mappingTable = attributes.getProperty("mappingTable");
+        String column = attributes.getProperty("column");
+        if (!StringUtility.stringHasValue(mappingTable)){
+            throw new XMLParserException(Messages.getString("RuntimeError.23", mappingTable));
+        }
+        if (!StringUtility.stringHasValue(column)) {
+            throw new XMLParserException(Messages.getString("RuntimeError.24", column));
+        }
+        OneToMany oto = new OneToMany(mappingTable, column);
+        String joinColumn = attributes.getProperty("joinColumn");
+        if (StringUtility.stringHasValue(joinColumn)) {
+            oto.setJoinColumn(joinColumn);
+        }
+        String where = attributes.getProperty("where");
+        if (StringUtility.stringHasValue(where)) {
+            oto.setWhere(where);
+        }
+        tc.getOneToManys().add(oto);
     }
 
     private void parseIgnoreColumnByRegex(TableConfiguration tc, Node node) {

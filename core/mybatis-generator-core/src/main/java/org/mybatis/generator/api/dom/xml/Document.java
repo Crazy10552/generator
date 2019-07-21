@@ -15,34 +15,77 @@
  */
 package org.mybatis.generator.api.dom.xml;
 
+import org.mybatis.generator.api.dom.OutputUtilities;
+
 import java.util.Optional;
 
+/**
+ * @author yttiany
+ * @author yttiany
+ */
 public class Document {
-
+    private String publicId;
+    private String systemId;
     private DocType docType;
-
     private XmlElement rootElement;
 
-    public Document(String publicId, String systemId) {
+    public Document(String publicId, String systemId)
+    {
+        this.publicId = publicId;
+        this.systemId = systemId;
         docType = new PublicDocType(publicId, systemId);
     }
 
     public Document(String systemId) {
         docType = new SystemDocType(systemId);
     }
-
-    public Document() {
+    public Document()
+    {
         super();
     }
 
-    public XmlElement getRootElement() {
-        return rootElement;
+    public XmlElement getRootElement()
+    {
+        return this.rootElement;
     }
 
-    public void setRootElement(XmlElement rootElement) {
+    public void setRootElement(XmlElement rootElement)
+    {
         this.rootElement = rootElement;
     }
-    
+
+    public String getPublicId()
+    {
+        return this.publicId;
+    }
+
+    public String getSystemId()
+    {
+        return this.systemId;
+    }
+
+    public String getFormattedContent()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+
+        if ((this.publicId != null) && (this.systemId != null)) {
+            OutputUtilities.newLine(sb);
+            sb.append("<!DOCTYPE ");
+            sb.append(this.rootElement.getName());
+            sb.append(" PUBLIC \"");
+            sb.append(this.publicId);
+            sb.append("\" \"");
+            sb.append(this.systemId);
+            sb.append("\">");
+        }
+
+        OutputUtilities.newLine(sb);
+        sb.append(this.rootElement.getFormattedContent(0));
+
+        return sb.toString();
+    }
     public Optional<DocType> getDocType() {
         return Optional.ofNullable(docType);
     }

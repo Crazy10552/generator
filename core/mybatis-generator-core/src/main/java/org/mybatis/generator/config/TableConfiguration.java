@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2018 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -82,6 +82,9 @@ public class TableConfiguration extends PropertyHolder {
     private String sqlProviderName;
 
     private List<IgnoredColumnPattern> ignoredColumnPatterns = new ArrayList<>();
+
+    private List<OneToOne> oneToOnes = new ArrayList();
+    private List<OneToMany> oneToManys = new ArrayList();
 
     public TableConfiguration(Context context) {
         super();
@@ -468,5 +471,21 @@ public class TableConfiguration extends PropertyHolder {
 
     public void setSqlProviderName(String sqlProviderName) {
         this.sqlProviderName = sqlProviderName;
+    }
+
+    public List<OneToOne> getOneToOnes() {
+        return oneToOnes;
+    }
+
+    public void setOneToOnes(List<OneToOne> oneToOnes) {
+        this.oneToOnes = oneToOnes;
+    }
+
+    public List<OneToMany> getOneToManys() {
+        return oneToManys;
+    }
+
+    public void setOneToManys(List<OneToMany> oneToManys) {
+        this.oneToManys = oneToManys;
     }
 }

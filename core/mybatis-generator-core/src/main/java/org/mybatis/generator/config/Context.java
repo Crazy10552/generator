@@ -442,22 +442,34 @@ public class Context extends PropertyHolder {
 
                 introspectedTable.initialize();
                 introspectedTable.calculateGenerators(warnings, callback);
-                generatedJavaFiles.addAll(introspectedTable
-                        .getGeneratedJavaFiles());
-                generatedXmlFiles.addAll(introspectedTable
-                        .getGeneratedXmlFiles());
+                if(introspectedTable.getGeneratedJavaFiles()!=null && introspectedTable.getGeneratedJavaFiles().size()>0){
+                    generatedJavaFiles.addAll(introspectedTable.getGeneratedJavaFiles());
+                }
+                if(introspectedTable.getGeneratedXmlFiles()!=null && introspectedTable.getGeneratedXmlFiles().size()>0){
+                    generatedXmlFiles.addAll(introspectedTable.getGeneratedXmlFiles());
+                }
 
-                generatedJavaFiles.addAll(pluginAggregator
-                        .contextGenerateAdditionalJavaFiles(introspectedTable));
-                generatedXmlFiles.addAll(pluginAggregator
-                        .contextGenerateAdditionalXmlFiles(introspectedTable));
+                if(pluginAggregator.contextGenerateAdditionalJavaFiles(introspectedTable)!=null
+                        && pluginAggregator.contextGenerateAdditionalJavaFiles(introspectedTable).size()>0){
+                    generatedJavaFiles.addAll(pluginAggregator.contextGenerateAdditionalJavaFiles(introspectedTable));
+                }
+
+                if(pluginAggregator.contextGenerateAdditionalXmlFiles(introspectedTable)!=null
+                        && pluginAggregator.contextGenerateAdditionalXmlFiles(introspectedTable).size()>0){
+                    generatedXmlFiles.addAll(pluginAggregator.contextGenerateAdditionalXmlFiles(introspectedTable));
+                }
             }
         }
 
-        generatedJavaFiles.addAll(pluginAggregator
-                .contextGenerateAdditionalJavaFiles());
-        generatedXmlFiles.addAll(pluginAggregator
-                .contextGenerateAdditionalXmlFiles());
+        if(pluginAggregator.contextGenerateAdditionalJavaFiles()!=null
+                && pluginAggregator.contextGenerateAdditionalJavaFiles().size()>0){
+            generatedJavaFiles.addAll(pluginAggregator.contextGenerateAdditionalJavaFiles());
+        }
+
+        if(pluginAggregator.contextGenerateAdditionalXmlFiles()!=null
+                && pluginAggregator.contextGenerateAdditionalXmlFiles().size()>0){
+            generatedXmlFiles.addAll(pluginAggregator.contextGenerateAdditionalXmlFiles());
+        }
     }
 
     private Connection getConnection() throws SQLException {
@@ -500,5 +512,13 @@ public class Context extends PropertyHolder {
 
     public void setJava8Targeted(boolean isJava8Targeted) {
         this.isJava8Targeted = isJava8Targeted;
+    }
+
+    public List<IntrospectedTable> getIntrospectedTables() {
+        return introspectedTables;
+    }
+
+    public void setIntrospectedTables(List<IntrospectedTable> introspectedTables) {
+        this.introspectedTables = introspectedTables;
     }
 }

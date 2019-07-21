@@ -30,15 +30,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.mybatis.generator.config.Context;
-import org.mybatis.generator.config.GeneratedKey;
-import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
-import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
-import org.mybatis.generator.config.ModelType;
-import org.mybatis.generator.config.PropertyHolder;
-import org.mybatis.generator.config.PropertyRegistry;
-import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
-import org.mybatis.generator.config.TableConfiguration;
+import org.mybatis.generator.config.*;
 import org.mybatis.generator.internal.rules.ConditionalModelRules;
 import org.mybatis.generator.internal.rules.FlatModelRules;
 import org.mybatis.generator.internal.rules.HierarchicalModelRules;
@@ -131,6 +123,9 @@ public abstract class IntrospectedTable {
      * Table type retrieved from database metadata.
      */
     protected String tableType;
+
+    private List<OneToOne> oneToOnes = new ArrayList();
+    private List<OneToMany> oneToManys = new ArrayList();
 
     public IntrospectedTable(TargetRuntime targetRuntime) {
         super();
@@ -394,7 +389,7 @@ public abstract class IntrospectedTable {
         context.getPlugins().initialized(this);
     }
 
-    protected void calculateXmlAttributes() {
+    public void calculateXmlAttributes() {
         setMyBatis3XmlMapperFileName(calculateMyBatis3XmlMapperFileName());
         setMyBatis3XmlMapperPackage(calculateSqlMapPackage());
 
@@ -679,7 +674,7 @@ public abstract class IntrospectedTable {
         return sb.toString();
     }
 
-    protected void calculateJavaClientAttributes() {
+    public void calculateJavaClientAttributes() {
         if (context.getJavaClientGeneratorConfiguration() == null) {
             return;
         }
@@ -722,7 +717,7 @@ public abstract class IntrospectedTable {
         setMyBatisDynamicSqlSupportType(sb.toString());
     }
 
-    protected String calculateJavaModelPackage() {
+    public String calculateJavaModelPackage() {
         JavaModelGeneratorConfiguration config = context
                 .getJavaModelGeneratorConfiguration();
 
@@ -733,7 +728,7 @@ public abstract class IntrospectedTable {
         return sb.toString();
     }
 
-    protected void calculateModelAttributes() {
+    public void calculateModelAttributes() {
         String pakkage = calculateJavaModelPackage();
 
         StringBuilder sb = new StringBuilder();
@@ -770,7 +765,7 @@ public abstract class IntrospectedTable {
      * use default value (targetPackage)
      * @return
      */
-    protected String calculateJavaModelExamplePackage() {
+    public String calculateJavaModelExamplePackage() {
         JavaModelGeneratorConfiguration config = context.getJavaModelGeneratorConfiguration();
         String exampleTargetPackage = config.getProperty(PropertyRegistry.MODEL_GENERATOR_EXAMPLE_PACKAGE);
         if (!stringHasValue(exampleTargetPackage)) {
@@ -1061,5 +1056,21 @@ public abstract class IntrospectedTable {
 
     public void setTableType(String tableType) {
         this.tableType = tableType;
+    }
+
+    public List<OneToOne> getOneToOnes() {
+        return oneToOnes;
+    }
+
+    public void setOneToOnes(List<OneToOne> oneToOnes) {
+        this.oneToOnes = oneToOnes;
+    }
+
+    public List<OneToMany> getOneToManys() {
+        return oneToManys;
+    }
+
+    public void setOneToManys(List<OneToMany> oneToManys) {
+        this.oneToManys = oneToManys;
     }
 }

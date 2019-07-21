@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2018 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.mybatis.generator.api.dom;
 
 public class OutputUtilities {
 
+    private static final String lineSeparator = "\t\n";
     /**
      * Utility class - no instances allowed.
      */
@@ -52,5 +53,9 @@ public class OutputUtilities {
         for (int i = 0; i < indentLevel; i++) {
             sb.append("  "); //$NON-NLS-1$
         }
+    }
+    public static void newLine(StringBuilder sb)
+    {
+        sb.append(lineSeparator);
     }
 }
