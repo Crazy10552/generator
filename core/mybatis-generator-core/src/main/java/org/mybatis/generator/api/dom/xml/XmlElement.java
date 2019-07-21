@@ -26,10 +26,9 @@ import java.util.List;
  * @author yttiany
  * @author yttiany
  */
-public class XmlElement  extends Element implements VisitableElement
+public class XmlElement  implements VisitableElement
 {
     private List<Attribute> attributes;
-    private List<Element> oldElements;
     private List<VisitableElement> elements = new ArrayList<>();
     private String name;
 
@@ -44,10 +43,6 @@ public class XmlElement  extends Element implements VisitableElement
     {
         this.attributes = new ArrayList();
         this.attributes.addAll(original.attributes);
-        this.oldElements = new ArrayList();
-        if( original.oldElements!=null ){
-            this.oldElements.addAll(original.oldElements);
-        }
         this.elements = new ArrayList();
         this.elements.addAll(original.elements);
         this.name = original.name;
@@ -64,27 +59,10 @@ public class XmlElement  extends Element implements VisitableElement
     }
 
 
-    public void addOldElement(Element oldElements)
-    {
-        this.oldElements.add(oldElements);
-    }
-
-    public void addOldElement(int index, Element oldElements)
-    {
-        this.oldElements.add(index, oldElements);
-    }
-
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
     }
 
-    public List<Element> getOldElements() {
-        return oldElements;
-    }
-
-    public void setOldElements(List<Element> oldElements) {
-        this.oldElements = oldElements;
-    }
 
     public List<VisitableElement> getElements() {
         return elements;
@@ -105,40 +83,6 @@ public class XmlElement  extends Element implements VisitableElement
     public String getName()
     {
         return this.name;
-    }
-
-    @Override
-    public String getFormattedContent(int indentLevel)
-    {
-        StringBuilder sb = new StringBuilder();
-
-        OutputUtilities.xmlIndent(sb, indentLevel);
-        sb.append('<');
-        sb.append(this.name);
-
-        Collections.sort(this.attributes);
-        for (Attribute att : this.attributes) {
-            sb.append(' ');
-            sb.append(att.getFormattedContent());
-        }
-
-        if (this.elements.size() > 0) {
-            sb.append(">");
-            for (Element element : this.oldElements) {
-                OutputUtilities.newLine(sb);
-                sb.append(element.getFormattedContent(indentLevel + 1));
-            }
-            OutputUtilities.newLine(sb);
-            OutputUtilities.xmlIndent(sb, indentLevel);
-            sb.append("</");
-            sb.append(this.name);
-            sb.append('>');
-        }
-        else {
-            sb.append(" />");
-        }
-
-        return sb.toString();
     }
 
     public void setName(String name)

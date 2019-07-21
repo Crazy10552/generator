@@ -64,28 +64,6 @@ public class Document {
         return this.systemId;
     }
 
-    public String getFormattedContent()
-    {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-
-        if ((this.publicId != null) && (this.systemId != null)) {
-            OutputUtilities.newLine(sb);
-            sb.append("<!DOCTYPE ");
-            sb.append(this.rootElement.getName());
-            sb.append(" PUBLIC \"");
-            sb.append(this.publicId);
-            sb.append("\" \"");
-            sb.append(this.systemId);
-            sb.append("\">");
-        }
-
-        OutputUtilities.newLine(sb);
-        sb.append(this.rootElement.getFormattedContent(0));
-
-        return sb.toString();
-    }
     public Optional<DocType> getDocType() {
         return Optional.ofNullable(docType);
     }

@@ -363,7 +363,7 @@ public class MyBatisGeneratorConfigurationParser {
                 parseColumnRenamingRule(tc, childNode);
             }
         }
-        context.addTableConfiguration(tc);
+//        context.addTableConfiguration(tc);
     }
 
     private void parseColumnOverride(TableConfiguration tc, Node node) {

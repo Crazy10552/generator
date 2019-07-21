@@ -21,22 +21,13 @@ import org.mybatis.generator.api.dom.OutputUtilities;
  * @author yttiany
  * @author yttiany
  */
-public class TextElement extends Element implements VisitableElement
+public class TextElement implements VisitableElement
 {
     private String content;
 
     public TextElement(String content)
     {
         this.content = content;
-    }
-
-    @Override
-    public String getFormattedContent(int indentLevel)
-    {
-        StringBuilder sb = new StringBuilder();
-        OutputUtilities.xmlIndent(sb, indentLevel);
-        sb.append(this.content);
-        return sb.toString();
     }
 
     @Override

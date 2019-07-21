@@ -29,11 +29,7 @@ import org.mybatis.generator.api.dom.java.JavaVisibility;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
-import org.mybatis.generator.api.dom.xml.Attribute;
-import org.mybatis.generator.api.dom.xml.Document;
-import org.mybatis.generator.api.dom.xml.Element;
-import org.mybatis.generator.api.dom.xml.TextElement;
-import org.mybatis.generator.api.dom.xml.XmlElement;
+import org.mybatis.generator.api.dom.xml.*;
 import org.mybatis.generator.config.Context;
 import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
 import org.mybatis.generator.config.OneToOne;
@@ -92,6 +88,7 @@ public class OneToOnePlugin extends PluginAdapter {
                 if ( !stringHasValue(domainName)) {
                     if( stringHasValue(tableName) ){
                         domainName =  JavaBeansUtil.getCamelCaseString(tableName, true);
+                        tc.setDomainObjectName(domainName);
                     }
                 }
                 String type = packageName + "." + domainName;
@@ -142,13 +139,20 @@ public class OneToOnePlugin extends PluginAdapter {
             IntrospectedTable it = getIt(tableName, context);
             if (tc != null) {
                 String domainName = tc.getDomainObjectName();
+                if ( !stringHasValue(domainName)) {
+                    if( stringHasValue(tableName) ){
+                        domainName =  JavaBeansUtil.getCamelCaseString(tableName, true);
+                        tc.setDomainObjectName(domainName);
+                    }
+                }
                 String fieldName = domainName.replaceFirst(new String(new char[]{domainName.charAt(0)}), new String(new char[]{domainName.charAt(0)}).toLowerCase());
 
                 XmlElement assEle = new XmlElement("association");
                 assEle.addAttribute(new Attribute("property", fieldName));
                 assEle.addAttribute(new Attribute("column", oto.getColumn()));
                 assEle.addAttribute(new Attribute("select", "get" + domainName));
-                for (Element ele : document.getRootElement().getOldElements()) {
+//                for (Element ele : document.getRootElement().getOldElements()) {
+                for ( VisitableElement ele : document.getRootElement().getElements() ) {
                     XmlElement xe = (XmlElement) ele;
                     for ( Attribute a:xe.getAttributes() ) {
                         if ((a.getName().equalsIgnoreCase("id")) && ("BaseResultMap".equals(a.getValue()))){
