@@ -15,12 +15,8 @@
  */
 package org.mybatis.generator.plugins;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 
 import org.mybatis.generator.api.FullyQualifiedTable;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -236,9 +232,29 @@ public class RowBoundsPlugin extends PluginAdapter {
             }
         }
 
+        /**
+         * ---------------------------------------------------------start-------------------------------------------------------------
+         * 调试发现这段代码就是在使用RowBoundsPlugin的情况下selectByExampleWithRowbounds 这个方法默认在xml生成3遍的原因,做了修复
+         */
         // save the new element locally.   We'll add it to the document
         // later
-        List<XmlElement> elements = elementsToAdd.computeIfAbsent(fqt, k -> new ArrayList<>());
-        elements.add(newElement);
+//        List<XmlElement> elements = elementsToAdd.computeIfAbsent(fqt, k -> new ArrayList<>());
+//        elements.add(newElement);
+
+        List<XmlElement> elements = elementsToAdd.computeIfAbsent(fqt, k -> Collections.singletonList(newElement));
+//        elements.add(newElement);
+
+//        Function<? super FullyQualifiedTable, ? extends List<XmlElement>> mappingFunction = new Function<FullyQualifiedTable, List<XmlElement>>() {
+//            @Override
+//            public List<XmlElement> apply(FullyQualifiedTable k) {
+//                return Collections.singletonList(newElement);
+//            }
+//        };
+//        List<XmlElement> elements = elementsToAdd.computeIfAbsent(fqt, mappingFunction);
+
+        /**
+         * --------------------------------------------------------end--------------------------------------------------------------
+         */
+
     }
 }

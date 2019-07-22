@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2006-2018 the original author or authors.
+       Copyright 2006-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -73,6 +73,20 @@
       <columnOverride column="id7$$" delimitedColumnName="true" />
       <columnOverride column="class" property="dbClass" />
     </table>
+    
+    <table tableName="OneChild">
+                <!--写法问题： mysql 数据库，字段区分大小写，驼峰写法：设置true时 字段名称正常写法 例如：fileName 转为fileName; 设置false 则是filename -->
+             <property name="useActualColumnNames" value="false" />
+    		<generatedKey column="opId" sqlStatement="MySql" identity="true" />
+    		<oneToOne mappingTable="OneParent" column="opId" joinColumn="opId" />
+      	    <oneToMany mappingTable="OneFriend" column="ocId" joinColumn="ocId" />
+          <!-- 有对应实体的时候，把字段忽略生成 -->
+          <!--<ignoreColumn column="OneChild" />-->
+      
+    </table>
+    
+    <table tableName="OneParent"/>
+    <table tableName="OneFriend"/>
     <table tableName="EnumTest">
       <columnOverride column="name" javaType="mbg.test.mb3.common.TestEnum"/>
     </table>

@@ -256,7 +256,7 @@
         
   
 <!--
-    diy plugin
+    diy plugin oneToOne and oneToMany
 -->
 <!ELEMENT oneToOne EMPTY>
 <!ATTLIST oneToOne

@@ -196,7 +196,8 @@ public class OneToOnePlugin extends PluginAdapter {
                 document.getRootElement().addElement(selectEle);
             }
         }
-        return super.sqlMapDocumentGenerated(document, introspectedTable);
+//        return super.sqlMapDocumentGenerated(document, introspectedTable);
+        return true;
     }
 
     @Override

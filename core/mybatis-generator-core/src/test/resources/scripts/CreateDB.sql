@@ -1,5 +1,5 @@
 --
---    Copyright 2006-2018 the original author or authors.
+--    Copyright 2006-2019 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -21,6 +21,9 @@ drop table PKBlobs if exists;
 drop table PKFieldsBlobs if exists;
 drop table FieldsBlobs if exists;
 drop table "awful table" if exists;
+drop table OneParent if exists;
+drop table OneChild if exists;
+drop table OneFriend if exists;
 drop table BlobsOnly if exists;
 drop view NameView if exists;
 drop table RegexRename if exists;
@@ -113,6 +116,38 @@ create table "awful table" (
   class varchar(5),
   primary key("CuStOmEr iD")
 );
+
+/**
+ * I add this to check oneToOne and oneToMany
+ =============================================start=====================================================
+ */
+create table OneParent (
+  opId integer not null,
+  parentName varchar(30),
+  description varchar(30),
+  primary key (opId)
+);
+
+create table OneChild (
+  ocId integer not null,
+  childName varchar(30),
+  description varchar(30),
+  opId integer,
+  primary key (ocId)
+);
+
+create table OneFriend (
+  ofId integer not null,
+  childName varchar(30),
+  description varchar(30),
+  ocId integer,
+  primary key (ofId)
+);
+
+/**
+ * I add this to check oneToOne and oneToMany
+ =============================================end=====================================================
+ */
 
 -- this table should be ignored, nothing generated
 create table BlobsOnly (
