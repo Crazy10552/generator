@@ -133,6 +133,7 @@ public class OneToOnePlugin extends PluginAdapter {
     @Override
     public boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
         Context context = introspectedTable.getContext();
+        String patTableName= introspectedTable.getFullyQualifiedTable().toString();
         for (OneToOne oto : introspectedTable.getOneToOnes()) {
             String tableName = oto.getMappingTable();
             TableConfiguration tc = getMapTc(tableName, context);
@@ -185,13 +186,14 @@ public class OneToOnePlugin extends PluginAdapter {
 
                 String sql = "select ";
                 for (IntrospectedColumn c : it.getAllColumns()) {
-                    sql = sql + c.getActualColumnName() + ",";
+                    sql = sql +"ct."+ c.getActualColumnName() + ",";
                 }
                 sql = sql.substring(0, sql.length() - 1);
-                sql = sql + " from " + tableName + " where " + oto.getJoinColumn() + "=#{" + tuofengColum + "}";
+                sql = sql + " from " + tableName + " as ct right join  "+patTableName+" as pt on ct."+oto.getColumn()+"= pt."+oto.getColumn()+" where ct." + oto.getJoinColumn() + "=#{" + tuofengColum + "} ";
                 if (StringUtility.stringHasValue(oto.getWhere())) {
                     sql = sql + " and " + oto.getWhere();
                 }
+
                 selectEle.addElement(new TextElement(sql));
                 document.getRootElement().addElement(selectEle);
             }
