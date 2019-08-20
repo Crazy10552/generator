@@ -194,7 +194,7 @@ public class OneToManyPlugin extends PluginAdapter {
                     sql = sql +"ct."+ c.getActualColumnName() + ",";
                 }
                 sql = sql.substring(0, sql.length() - 1);
-                sql = sql + " from " + tableName + " as ct right join  "+patTableName+" as pt on ct."+otm.getColumn()+"= pt."+otm.getColumn()+" where ct." + otm.getJoinColumn() + "=#{" + tuofengColum + "} ";
+                sql = sql + " \n from " + tableName + " as ct right join  "+patTableName+" as pt on ct."+otm.getColumn()+"= pt."+otm.getColumn()+" \n where ct." + otm.getJoinColumn() + "=#{" + tuofengColum + "} ";
                 if (StringUtility.stringHasValue(otm.getWhere())) {
                     sql = sql + " and " + otm.getWhere();
                 }

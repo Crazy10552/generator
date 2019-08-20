@@ -189,7 +189,7 @@ public class OneToOnePlugin extends PluginAdapter {
                     sql = sql +"ct."+ c.getActualColumnName() + ",";
                 }
                 sql = sql.substring(0, sql.length() - 1);
-                sql = sql + " from " + tableName + " as ct right join  "+patTableName+" as pt on ct."+oto.getColumn()+"= pt."+oto.getColumn()+" where ct." + oto.getJoinColumn() + "=#{" + tuofengColum + "} ";
+                sql = sql + " \n from " + tableName + " as ct right join  "+patTableName+" as pt on ct."+oto.getColumn()+"= pt."+oto.getColumn()+" \n where ct." + oto.getJoinColumn() + "=#{" + tuofengColum + "} ";
                 if (StringUtility.stringHasValue(oto.getWhere())) {
                     sql = sql + " and " + oto.getWhere();
                 }
