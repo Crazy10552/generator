@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2018 the original author or authors.
+ *    Copyright 2006-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,10 @@
  */
 package org.mybatis.generator.api.dom.java;
 
+import org.mybatis.generator.api.dom.OutputUtilities;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public abstract class JavaElement {
@@ -26,6 +29,8 @@ public abstract class JavaElement {
 
     private boolean isStatic;
 
+    private boolean isFinal;
+
     private List<String> annotations = new ArrayList<>();
 
     public JavaElement() {
@@ -35,9 +40,11 @@ public abstract class JavaElement {
     public JavaElement(JavaElement original) {
         this.annotations.addAll(original.annotations);
         this.isStatic = original.isStatic;
+        this.isFinal = original.isFinal;
         this.javaDocLines.addAll(original.javaDocLines);
         this.visibility = original.visibility;
     }
+
 
     public List<String> getJavaDocLines() {
         return javaDocLines;
@@ -73,5 +80,37 @@ public abstract class JavaElement {
 
     public void setStatic(boolean isStatic) {
         this.isStatic = isStatic;
+    }
+
+    public boolean isFinal() {
+        return isFinal;
+    }
+
+    public void setFinal(boolean isFinal) {
+        this.isFinal = isFinal;
+    }
+
+    public void addFormattedJavadoc(StringBuilder sb, int indentLevel) {
+        Iterator var3 = this.javaDocLines.iterator();
+
+        while(var3.hasNext()) {
+            String javaDocLine = (String)var3.next();
+            OutputUtilities.javaIndent(sb, indentLevel);
+            sb.append(javaDocLine);
+            OutputUtilities.newLine(sb);
+        }
+
+    }
+
+    public void addFormattedAnnotations(StringBuilder sb, int indentLevel) {
+        Iterator var3 = this.annotations.iterator();
+
+        while(var3.hasNext()) {
+            String annotation = (String)var3.next();
+            OutputUtilities.javaIndent(sb, indentLevel);
+            sb.append(annotation);
+            OutputUtilities.newLine(sb);
+        }
+
     }
 }

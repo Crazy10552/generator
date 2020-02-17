@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2019 the original author or authors.
+ *    Copyright 2006-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -134,8 +134,8 @@ public class OneToOnePlugin extends PluginAdapter {
     public boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
         Context context = introspectedTable.getContext();
         String patTableName= introspectedTable.getFullyQualifiedTable().toString();
-        for (OneToOne oto : introspectedTable.getOneToOnes()) {
-            String tableName = oto.getMappingTable();
+        for (OneToOne oneToOne : introspectedTable.getOneToOnes()) {
+            String tableName = oneToOne.getMappingTable();
             TableConfiguration tc = getMapTc(tableName, context);
             IntrospectedTable it = getIt(tableName, context);
             if (tc != null) {
@@ -150,7 +150,7 @@ public class OneToOnePlugin extends PluginAdapter {
 
                 XmlElement assEle = new XmlElement("association");
                 assEle.addAttribute(new Attribute("property", fieldName));
-                assEle.addAttribute(new Attribute("column", oto.getColumn()));
+                assEle.addAttribute(new Attribute("column", oneToOne.getColumn()));
                 assEle.addAttribute(new Attribute("select", "get" + domainName));
 //                for (Element ele : document.getRootElement().getOldElements()) {
                 for ( VisitableElement ele : document.getRootElement().getElements() ) {
@@ -164,7 +164,7 @@ public class OneToOnePlugin extends PluginAdapter {
                 Iterator localIterator3;
                 String tuofengColum = "";
                 boolean isUp = false;
-                byte[] xe = oto.getColumn().getBytes();
+                byte[] xe = oneToOne.getColumn().getBytes();
                 int localAttribute1 = xe.length;
                 for (int a = 0; a < localAttribute1; a++) {
                     byte b = xe[a];
@@ -189,9 +189,9 @@ public class OneToOnePlugin extends PluginAdapter {
                     sql = sql +"ct."+ c.getActualColumnName() + ",";
                 }
                 sql = sql.substring(0, sql.length() - 1);
-                sql = sql + " \n from " + tableName + " as ct right join  "+patTableName+" as pt on ct."+oto.getColumn()+"= pt."+oto.getColumn()+" \n where ct." + oto.getJoinColumn() + "=#{" + tuofengColum + "} ";
-                if (StringUtility.stringHasValue(oto.getWhere())) {
-                    sql = sql + " and " + oto.getWhere();
+                sql = sql + " \n\t from " + tableName + " as ct \n\t\t right join  "+patTableName+" as pt on ct."+oneToOne.getColumn()+"= pt."+oneToOne.getColumn()+" \n \twhere ct." + oneToOne.getJoinColumn() + "=#{" + tuofengColum + "} ";
+                if (StringUtility.stringHasValue(oneToOne.getWhere())) {
+                    sql = sql + " and " + oneToOne.getWhere();
                 }
 
                 selectEle.addElement(new TextElement(sql));

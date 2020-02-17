@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2019 the original author or authors.
+ *    Copyright 2006-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,10 +26,13 @@ import java.util.List;
  * @author yttiany
  * @author yttiany
  */
-public class XmlElement  implements VisitableElement
+public class XmlElement extends Element implements VisitableElement
 {
     private List<Attribute> attributes;
     private List<VisitableElement> elements = new ArrayList<>();
+
+    //TODO 2020年2月8日
+    private List<Element> elements2 = new ArrayList<>();
     private String name;
 
     public XmlElement(String name)
@@ -68,6 +71,12 @@ public class XmlElement  implements VisitableElement
         return elements;
     }
 
+    //TODO 2020年2月8日
+    public List<Element> getElementsOld() {
+        return elements2;
+    }
+
+
     public void setElements(List<VisitableElement> elements) {
         this.elements = elements;
     }
@@ -76,8 +85,16 @@ public class XmlElement  implements VisitableElement
         elements.add(element);
     }
 
+    //TODO 2020年2月8日
+    public void addElementOld(Element element) {
+        elements2.add(element);
+    }
     public void addVElement(int index, VisitableElement element) {
         elements.add(index, element);
+    }
+    //TODO 2020年2月8日
+    public void addElement(int index, Element element) {
+        elements2.add(index, element);
     }
 
     public String getName()
@@ -97,5 +114,10 @@ public class XmlElement  implements VisitableElement
 
     public boolean hasChildren() {
         return !elements.isEmpty();
+    }
+
+    @Override
+    public String getFormattedContent(int paramInt) {
+        return null;
     }
 }

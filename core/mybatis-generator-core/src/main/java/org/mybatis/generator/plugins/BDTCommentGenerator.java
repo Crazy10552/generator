@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2019 the original author or authors.
+ *    Copyright 2006-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.internal.DefaultCommentGenerator;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -105,6 +106,7 @@ public class BDTCommentGenerator extends DefaultCommentGenerator {
             sb.append(" * @param ");
             String paramterName = parameter.getName();
             sb.append(paramterName);
+            sb.append("\t"+paramterName);
             if ("orderByClause".equals(paramterName)){
                 sb.append(" 排序字段");
             }else if ("distinct".equals(paramterName)){
@@ -114,7 +116,7 @@ public class BDTCommentGenerator extends DefaultCommentGenerator {
             }
             method.addJavaDocLine(sb.toString());
         }
-
+        method.addJavaDocLine(" * @return 返回参数");
         method.addJavaDocLine(" */");
     }
 
@@ -123,11 +125,13 @@ public class BDTCommentGenerator extends DefaultCommentGenerator {
     {
         String shortName = innerClass.getType().getShortName();
         innerClass.addJavaDocLine("/**");
-
+        innerClass.addJavaDocLine(" * @author tianyang");
+        innerClass.addJavaDocLine(" * @date "+new Date());
+        innerClass.addJavaDocLine(" * @desc "+introspectedTable.getFullyQualifiedTable().getRemark());
         innerClass.addJavaDocLine(new StringBuilder().append(" * ").append(introspectedTable.getFullyQualifiedTable().getRemark()).toString());
         innerClass.addJavaDocLine(new StringBuilder().append(" * ").append(shortName).toString());
         innerClass.addJavaDocLine(new StringBuilder().append(" * 数据库表：").append(introspectedTable.getFullyQualifiedTable()).toString());
-
+        addJavadocTag(innerClass, false);
         innerClass.addJavaDocLine(" */");
     }
 
@@ -136,10 +140,12 @@ public class BDTCommentGenerator extends DefaultCommentGenerator {
     {
         String shortName = innerClass.getType().getShortName();
         innerClass.addJavaDocLine("/**");
-        innerClass.addJavaDocLine(" * 类注释");
-        innerClass.addJavaDocLine(new StringBuilder().append(" * ").append(shortName).toString());
+        innerClass.addJavaDocLine(new StringBuilder().append(" * ").append(shortName).append("类注释").toString());
+        innerClass.addJavaDocLine(" * @author tianyang");
+        innerClass.addJavaDocLine(" * @date "+new Date());
+        innerClass.addJavaDocLine(" * @desc "+introspectedTable.getFullyQualifiedTable().getRemark());
         innerClass.addJavaDocLine(new StringBuilder().append(" * 数据库表：").append(introspectedTable.getFullyQualifiedTable()).toString());
-
+        addJavadocTag(innerClass, markAsDoNotDelete);
         innerClass.addJavaDocLine(" */");
     }
 
@@ -159,6 +165,7 @@ public class BDTCommentGenerator extends DefaultCommentGenerator {
 
         field.addJavaDocLine(" */");
     }
+
 
     @Override
     public void addGetterComment(Method method, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn)
@@ -219,6 +226,10 @@ public class BDTCommentGenerator extends DefaultCommentGenerator {
         method.addJavaDocLine(" */");
     }
 
+    /**
+     * xml 中方法头上面的注释,这里都屏蔽
+     * @param xmlElement
+     */
     @Override
     public void addComment(XmlElement xmlElement)
     {

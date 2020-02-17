@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2018 the original author or authors.
+ *    Copyright 2006-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.mybatis.generator.api.dom.java;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.mybatis.generator.api.dom.java.render.TypeParameterRenderer;
@@ -48,5 +49,26 @@ public class TypeParameter {
     @Override
     public String toString() {
         return new TypeParameterRenderer().render(this, null);
+    }
+
+    public String getFormattedContent(CompilationUnit compilationUnit) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.name);
+        if (!this.extendsTypes.isEmpty()) {
+            sb.append(" extends ");
+            boolean addAnd = false;
+
+            FullyQualifiedJavaType type;
+            for(Iterator var4 = this.extendsTypes.iterator(); var4.hasNext(); sb.append(JavaDomUtils.calculateTypeName(compilationUnit, type))) {
+                type = (FullyQualifiedJavaType)var4.next();
+                if (addAnd) {
+                    sb.append(" & ");
+                } else {
+                    addAnd = true;
+                }
+            }
+        }
+
+        return sb.toString();
     }
 }

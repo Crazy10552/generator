@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2018 the original author or authors.
+ *    Copyright 2006-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.mybatis.generator.api.dom.java;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.mybatis.generator.api.dom.java.render.ParameterRenderer;
@@ -70,5 +71,25 @@ public class Parameter {
 
     public boolean isVarargs() {
         return isVarargs;
+    }
+
+    public String getFormattedContent(CompilationUnit compilationUnit) {
+        StringBuilder sb = new StringBuilder();
+        Iterator var3 = this.annotations.iterator();
+
+        while(var3.hasNext()) {
+            String annotation = (String)var3.next();
+            sb.append(annotation);
+            sb.append(' ');
+        }
+
+        sb.append(JavaDomUtils.calculateTypeName(compilationUnit, this.type));
+        sb.append(' ');
+        if (this.isVarargs) {
+            sb.append("... ");
+        }
+
+        sb.append(this.name);
+        return sb.toString();
     }
 }

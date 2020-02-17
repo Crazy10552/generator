@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2019 the original author or authors.
+ *    Copyright 2006-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,10 +15,9 @@
  */
 package org.mybatis.generator.api.dom.java;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import org.mybatis.generator.api.dom.OutputUtilities;
+
+import java.util.*;
 
 public class Method extends JavaElement {
 
@@ -189,5 +188,139 @@ public class Method extends JavaElement {
 
     public void setFinal(boolean isFinal) {
         this.isFinal = isFinal;
+    }
+
+    public String getFormattedContent(int indentLevel, boolean interfaceMethod, CompilationUnit compilationUnit){
+         StringBuilder sb = new StringBuilder();
+        this.addFormattedJavadoc(sb, indentLevel);
+        this.addFormattedAnnotations(sb, indentLevel);
+        OutputUtilities.javaIndent(sb, indentLevel);
+        if (interfaceMethod) {
+            if (this.isStatic()) {
+                sb.append("static ");
+            } else if (this.isDefault()) {
+                sb.append("default ");
+            }
+        } else {
+            sb.append(this.getVisibility().getValue());
+            if (this.isStatic()) {
+                sb.append("static ");
+            }
+
+            if (this.isFinal()) {
+                sb.append("final ");
+            }
+
+            if (this.isSynchronized()) {
+                sb.append("synchronized ");
+            }
+
+            if (this.isNative()) {
+                sb.append("native ");
+            } else if (this.bodyLines.size() == 0) {
+                sb.append("abstract ");
+            }
+        }
+
+        boolean comma;
+        Iterator var6;
+        if (!this.getTypeParameters().isEmpty()) {
+            sb.append("<");
+            comma = false;
+
+            TypeParameter typeParameter;
+            for(var6 = this.getTypeParameters().iterator(); var6.hasNext(); sb.append(typeParameter.getFormattedContent(compilationUnit))) {
+                typeParameter = (TypeParameter)var6.next();
+                if (comma) {
+                    sb.append(", ");
+                } else {
+                    comma = true;
+                }
+            }
+
+            sb.append("> ");
+        }
+
+        if (!this.constructor) {
+            if (this.getReturnType() == null) {
+                sb.append("void");
+            } else {
+                sb.append(JavaDomUtils.calculateTypeName(compilationUnit, this.getReturnType().get()));
+            }
+
+            sb.append(' ');
+        }
+
+        sb.append(this.getName());
+        sb.append('(');
+        comma = false;
+
+        Parameter parameter;
+        for(var6 = this.getParameters().iterator(); var6.hasNext(); sb.append(parameter.getFormattedContent(compilationUnit))) {
+            parameter = (Parameter)var6.next();
+            if (comma) {
+                sb.append(", ");
+            } else {
+                comma = true;
+            }
+        }
+
+        sb.append(')');
+        if (this.getExceptions().size() > 0) {
+            sb.append(" throws ");
+            comma = false;
+
+            FullyQualifiedJavaType fqjt;
+            for(var6 = this.getExceptions().iterator(); var6.hasNext(); sb.append(JavaDomUtils.calculateTypeName(compilationUnit, fqjt))) {
+                fqjt = (FullyQualifiedJavaType)var6.next();
+                if (comma) {
+                    sb.append(", ");
+                } else {
+                    comma = true;
+                }
+            }
+        }
+
+        if (this.bodyLines.size() != 0 && !this.isNative()) {
+            sb.append(" {");
+            ++indentLevel;
+            ListIterator listIter = this.bodyLines.listIterator();
+
+            while(listIter.hasNext()) {
+                String line = (String)listIter.next();
+                if (line.startsWith("}")) {
+                    --indentLevel;
+                }
+
+                OutputUtilities.newLine(sb);
+                OutputUtilities.javaIndent(sb, indentLevel);
+                sb.append(line);
+                if (line.endsWith("{") && !line.startsWith("switch") || line.endsWith(":")) {
+                    ++indentLevel;
+                }
+
+                if (line.startsWith("break")) {
+                    if (listIter.hasNext()) {
+                        String nextLine = (String)listIter.next();
+                        if (nextLine.startsWith("}")) {
+                            ++indentLevel;
+                        }
+
+                        listIter.previous();
+                    }
+
+                    --indentLevel;
+                }
+            }
+
+            --indentLevel;
+            OutputUtilities.newLine(sb);
+            OutputUtilities.javaIndent(sb, indentLevel);
+            sb.append('}');
+        } else {
+            sb.append(';');
+        }
+
+        return sb.toString();
     }
 }

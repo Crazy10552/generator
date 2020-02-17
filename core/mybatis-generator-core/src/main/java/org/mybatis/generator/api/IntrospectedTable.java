@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2019 the original author or authors.
+ *    Copyright 2006-2020 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -126,6 +126,7 @@ public abstract class IntrospectedTable {
 
     private List<OneToOne> oneToOnes = new ArrayList();
     private List<OneToMany> oneToManys = new ArrayList();
+    private List<ManyToMany> manyToManys = new ArrayList();
 
     public IntrospectedTable(TargetRuntime targetRuntime) {
         super();
@@ -1072,5 +1073,13 @@ public abstract class IntrospectedTable {
 
     public void setOneToManys(List<OneToMany> oneToManys) {
         this.oneToManys = oneToManys;
+    }
+
+    public List<ManyToMany> getManyToManys() {
+        return manyToManys;
+    }
+
+    public void setManyToManys(List<ManyToMany> manyToManys) {
+        this.manyToManys = manyToManys;
     }
 }
